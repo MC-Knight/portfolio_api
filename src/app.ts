@@ -15,7 +15,7 @@ app.use(cors({ origin: "*" }));
 addRoutes(app);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
+  res.send("my brand api");
 });
 
 app.listen(port, () => {
