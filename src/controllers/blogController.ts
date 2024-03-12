@@ -69,6 +69,17 @@ class BlogController {
 
     res.status(200).json({ message: "blog edited successfully" });
   }
+
+  static async deleteBlogs(req: Request, res: Response): Promise<void> {
+    const blog = await Blog.findByIdAndDelete(req.params.id);
+
+    if (blog == null) {
+      res.status(404).json({ error: "blog with the given ID was not found." });
+      return;
+    }
+
+    res.status(200).json({ message: "blog deleted successfully" });
+  }
 }
 
 export default BlogController;
