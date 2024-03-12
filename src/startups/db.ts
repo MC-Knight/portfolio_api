@@ -6,7 +6,7 @@ dotenv.config();
 const db: string | undefined = process.env.DB;
 
 export const ConnectToDb = (): void => {
-  if (db) {
+  if (db !== undefined) {
     mongoose
       .connect(db)
       .then(() => {
