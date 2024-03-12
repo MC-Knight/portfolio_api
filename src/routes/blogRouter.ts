@@ -5,5 +5,6 @@ const routerBlog = express();
 
 routerBlog.post("/create", BlogController.createBlog);
 routerBlog.get("", BlogController.getAllBlogs);
+routerBlog.put("/edit/:id", BlogController.editBlogs);
 
 export default routerBlog;

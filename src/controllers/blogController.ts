@@ -31,6 +31,26 @@ class BlogController {
       res.status(400).json({ error: "Something went wrong" });
     }
   }
+
+  static async editBlogs(req: Request, res: Response): Promise<void> {
+    const { error } = validate(req.body);
+    if (error !== undefined) {
+      res.status(400).json({ error: error?.details[0].message });
+      return;
+    }
+
+    const blog = await Blog.findByIdAndUpdate(req.params.id, {
+      title: req.body.title,
+      content: req.body.content,
+    });
+
+    if (blog == null) {
+      res.status(404).json({ error: "blog with the given ID was not found." });
+      return;
+    }
+
+    res.status(200).json({ message: "blog edited successfully" });
+  }
 }
 
 export default BlogController;
