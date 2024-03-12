@@ -1,13 +1,18 @@
-import express, { Express, Request, Response } from "express";
+import express, { type Express, type Request, type Response } from "express";
+import cors from "cors";
 import dotenv from "dotenv";
 import { ConnectToDb } from "./startups/db";
+import { addRoutes } from "./startups/routes";
 
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT ?? 3000;
 
 ConnectToDb();
+
+app.use(cors({ origin: "*" }));
+addRoutes(app);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
