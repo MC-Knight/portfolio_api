@@ -67,21 +67,23 @@ class BlogController {
 
       const blogsWithComments = [];
 
-      for (const blog of blogs) {
-        const comments = await Comment.find({ blog: blog._id });
-        const blogWithComments = {
-          _id: blog._id,
-          title: blog.title,
-          content: blog.content,
-          date: blog.date,
-          views: blog.views,
-          likes: blog.likes,
-          comments,
-        };
-        blogsWithComments.push(blogWithComments);
-
-        res.status(200).json({ blogsWithComments });
+      if (blogs.length !== 0) {
+        for (const blog of blogs) {
+          const comments = await Comment.find({ blog: blog._id });
+          const blogWithComments = {
+            _id: blog._id,
+            title: blog.title,
+            content: blog.content,
+            date: blog.date,
+            views: blog.views,
+            likes: blog.likes,
+            comments,
+          };
+          blogsWithComments.push(blogWithComments);
+        }
       }
+
+      res.status(200).json({ blogsWithComments });
     } catch (error) {
       return res.status(400).json({ error: "Something went wrong" });
     }
@@ -113,6 +115,7 @@ class BlogController {
     req: Request,
     res: Response
   ): Promise<undefined | Response<any, Record<string, any>>> {
+    await Comment.deleteMany({ blog: req.params.id });
     const blog = await Blog.findByIdAndDelete(req.params.id);
 
     if (blog == null) {

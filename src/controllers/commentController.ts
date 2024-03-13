@@ -30,6 +30,21 @@ class CommentController {
       res.status(400).json({ error: "sommething goes wrong" });
     }
   }
+
+  static async deleteComments(
+    req: Request,
+    res: Response
+  ): Promise<undefined | Response<any, Record<string, any>>> {
+    const comment = await Comment.findByIdAndDelete(req.params.id);
+
+    if (comment == null) {
+      return res
+        .status(404)
+        .json({ error: "comment with the given ID was not found." });
+    }
+
+    res.status(200).json({ message: "comment deleted successfully" });
+  }
 }
 
 export default CommentController;
