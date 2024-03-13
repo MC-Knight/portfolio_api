@@ -1,5 +1,6 @@
 import { type Request, type Response } from "express";
 import { Blog, validate } from "../models/blog";
+import { Comment } from "../models/comment";
 
 class BlogController {
   static async createBlog(
@@ -39,7 +40,19 @@ class BlogController {
           .json({ error: "blog with the given ID was not found." });
       }
 
-      res.status(200).json({ blog });
+      const comments = await Comment.find({ blog: blog._id });
+
+      const blogWithComments = {
+        _id: blog._id,
+        title: blog.title,
+        content: blog.content,
+        date: blog.date,
+        views: blog.views,
+        likes: blog.likes,
+        comments,
+      };
+
+      res.status(200).json({ blogWithComments });
     } catch (error) {
       res.status(400).json({ error: "Something went wrong" });
     }
@@ -51,7 +64,24 @@ class BlogController {
   ): Promise<undefined | Response<any, Record<string, any>>> {
     try {
       const blogs = await Blog.find();
-      res.status(200).json({ blogs });
+
+      const blogsWithComments = [];
+
+      for (const blog of blogs) {
+        const comments = await Comment.find({ blog: blog._id });
+        const blogWithComments = {
+          _id: blog._id,
+          title: blog.title,
+          content: blog.content,
+          date: blog.date,
+          views: blog.views,
+          likes: blog.likes,
+          comments,
+        };
+        blogsWithComments.push(blogWithComments);
+
+        res.status(200).json({ blogsWithComments });
+      }
     } catch (error) {
       return res.status(400).json({ error: "Something went wrong" });
     }
