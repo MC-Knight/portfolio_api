@@ -4,6 +4,7 @@ import { Schema, model } from "mongoose";
 interface IBlog {
   title: string;
   content: string;
+  poster: string;
   date: Date;
   views: number;
   likes: number;
@@ -13,6 +14,7 @@ interface IBlog {
 const blogSchema = new Schema<IBlog>({
   title: { type: String, required: true },
   content: { type: String, required: true },
+  poster: { type: String, default: "" },
   date: { type: Date, default: Date.now() },
   views: { type: Number, default: 0 },
   likes: { type: Number, default: 0 },

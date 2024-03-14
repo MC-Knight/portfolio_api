@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import { Blog, validate } from "../models/blog";
 import { Comment } from "../models/comment";
+import cloudinary from "../utils/cloudinary";
 
 class BlogController {
   static async createBlog(
@@ -13,9 +14,18 @@ class BlogController {
         return res.status(400).json({ error: error?.details[0].message });
       }
 
+      let posterUrl: string | undefined;
+
+      if (req.file !== undefined) {
+        const file = req.file.path;
+        const link = await cloudinary.uploader.upload(file);
+        posterUrl = link.secure_url;
+      }
+
       const blog = new Blog({
         title: req.body.title,
         content: req.body.content,
+        poster: posterUrl,
       });
 
       await blog.save();
@@ -46,6 +56,7 @@ class BlogController {
         _id: blog._id,
         title: blog.title,
         content: blog.content,
+        poster: blog.poster,
         date: blog.date,
         views: blog.views,
         likes: blog.likes,
@@ -74,6 +85,7 @@ class BlogController {
             _id: blog._id,
             title: blog.title,
             content: blog.content,
+            poster: blog.poster,
             date: blog.date,
             views: blog.views,
             likes: blog.likes,
@@ -125,6 +137,44 @@ class BlogController {
     }
 
     res.status(200).json({ message: "blog deleted successfully" });
+  }
+
+  static async viewBlogs(
+    req: Request,
+    res: Response
+  ): Promise<undefined | Response<any, Record<string, any>>> {
+    const blog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { views: 1 } },
+      { new: true }
+    );
+
+    if (blog == null) {
+      return res
+        .status(404)
+        .json({ error: "blog with the given ID was not found." });
+    }
+
+    res.status(200).json({ message: "blog views updated successfully" });
+  }
+
+  static async likeBlogs(
+    req: Request,
+    res: Response
+  ): Promise<undefined | Response<any, Record<string, any>>> {
+    const blog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { likes: 1 } },
+      { new: true }
+    );
+
+    if (blog == null) {
+      return res
+        .status(404)
+        .json({ error: "blog with the given ID was not found." });
+    }
+
+    res.status(200).json({ message: "blog likes updated successfully" });
   }
 }
 
