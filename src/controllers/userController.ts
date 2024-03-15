@@ -2,7 +2,12 @@ import { type Request, type Response } from "express";
 import _ from "lodash";
 import Joi from "joi";
 import { User, validate } from "../models/user";
+import { RefreshToken, validateRefToken } from "../models/authTokens";
 import bcrypt from "bcrypt";
+import jwt, { type JwtPayload, type Secret } from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 function validateLoginRequestBody(req: {
   email: string;
@@ -66,14 +71,87 @@ class UserController {
       req.body.password,
       user.password
     );
+
     if (!validPassword) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    const token = user.generateAuthToken();
+    const accessToken = user.generateAuthToken();
+
+    const refreshToken = user.generateRefreshToken();
+
+    const newRefToken = new RefreshToken({
+      token: refreshToken,
+    });
+
+    await newRefToken.save();
+
     res.status(200).json({
       message: "Logged in successfully!",
-      access: token,
+      access: accessToken,
+      refresh: refreshToken,
+    });
+  }
+
+  static async refreshAccessToken(
+    req: Request,
+    res: Response
+  ): Promise<undefined | Response<any, Record<string, any>>> {
+    const { error } = validateRefToken(req.body);
+    if (error !== undefined) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const refreshToken = req.body.token;
+
+    const refreshTokenDoc = await RefreshToken.findOne({
+      token: refreshToken,
+    });
+
+    if (refreshTokenDoc === null) {
+      return res.status(403).json({ error: "Refresh token not found" });
+    }
+
+    const decode = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_KEY as Secret
+    ) as JwtPayload;
+
+    const userId = decode._id;
+
+    const user = await User.findById(userId);
+    if (user === null) {
+      await RefreshToken.findByIdAndDelete(refreshTokenDoc._id);
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const accessToken = user.generateAuthToken();
+    res.status(200).json({
+      access: accessToken,
+    });
+  }
+
+  static async logout(
+    req: Request,
+    res: Response
+  ): Promise<undefined | Response<any, Record<string, any>>> {
+    const { error } = validateRefToken(req.body);
+    if (error !== undefined) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const refreshToken = req.body.token;
+
+    const refreshTokenDoc = await RefreshToken.findOneAndDelete({
+      token: refreshToken,
+    });
+
+    if (refreshTokenDoc === null) {
+      return res.status(403).json({ error: "Refresh token not found" });
+    }
+
+    res.status(200).json({
+      message: "logged out successfully",
     });
   }
 }

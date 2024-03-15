@@ -12,6 +12,7 @@ interface IUser {
   password: string;
   isAdmin: boolean;
   generateAuthToken: () => string;
+  generateRefreshToken: () => string;
 }
 
 const userSchema = new Schema<IUser>({
@@ -51,6 +52,14 @@ userSchema.methods.generateAuthToken = function (): string {
     { _id: this._id, isAdmin: this.isAdmin },
     process.env.JWT_ACCESS_KEY as Secret,
     { expiresIn: "1h" }
+  );
+  return token;
+};
+
+userSchema.methods.generateRefreshToken = function (): string {
+  const token: string = jwt.sign(
+    { _id: this._id, isAdmin: this.isAdmin },
+    process.env.JWT_REFRESH_KEY as Secret
   );
   return token;
 };
