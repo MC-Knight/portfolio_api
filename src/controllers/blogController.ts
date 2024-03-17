@@ -32,7 +32,7 @@ class BlogController {
 
       res.status(201).json({ message: "blog created successfully", blog });
     } catch (error) {
-      res.status(400).json({ error: "sommething goes wrong" });
+      res.status(500).json({ error: "sommething goes wrong" });
     }
   }
 
@@ -65,7 +65,7 @@ class BlogController {
 
       res.status(200).json({ blogWithComments });
     } catch (error) {
-      res.status(400).json({ error: "Something went wrong" });
+      res.status(500).json({ error: "Something went wrong" });
     }
   }
 
@@ -97,7 +97,7 @@ class BlogController {
 
       res.status(200).json({ blogsWithComments });
     } catch (error) {
-      return res.status(400).json({ error: "Something went wrong" });
+      return res.status(500).json({ error: "Something went wrong" });
     }
   }
 
