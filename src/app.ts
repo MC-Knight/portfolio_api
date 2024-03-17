@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { ConnectToDb } from "./startups/db";
 import { addRoutes } from "./startups/routes";
+import { addDocumentation } from "./startups/docs";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ ConnectToDb();
 
 app.use(cors({ origin: "*" }));
 addRoutes(app);
+addDocumentation(app);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("my brand api");
