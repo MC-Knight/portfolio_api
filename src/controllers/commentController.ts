@@ -27,7 +27,7 @@ class CommentController {
 
       res.status(201).json({ message: "comment posted successfully", comment });
     } catch (error) {
-      res.status(400).json({ error: "sommething goes wrong" });
+      res.status(500).json({ error: "sommething goes wrong" });
     }
   }
 

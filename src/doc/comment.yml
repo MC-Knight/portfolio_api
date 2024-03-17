@@ -1,0 +1,47 @@
+/comments/create:
+  post:
+    tags:
+      - Comment
+    summary: Create a new comment.
+    description: Creates a new comment on the specified blog
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+                example: This is a great blog!
+              blog:
+                type: string
+                description: blog id
+                example: 65f1ca4d1c1c23d46fbe5b5f
+    responses:
+      "201":
+        description: comment posted successfully
+      "404":
+        description: Invalid blog ID, blog not found
+      "500":
+        description: something goes wrong
+
+/comments/delete/{id}:
+  delete:
+    tags:
+      - Comment
+    summary: Delete a comment by its id.
+    description: Deletes a comment with given id from params
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: comment id
+        type: string
+    responses:
+      "200":
+        description: comment deleted successfully
+      "404":
+        description: comment with the given ID was not found.
+      "500":
+        description: something goes wrong
