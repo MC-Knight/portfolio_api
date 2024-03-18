@@ -1,0 +1,170 @@
+/blogs/create:
+  post:
+    tags:
+      - Blog
+    summary: Create a new blog
+    description: create new blog in database
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                description: The title of the blog
+              content:
+                type: string
+                description: The content of the blog
+              image:
+                type: string
+                format: binary
+                description: blog poster image
+            required:
+              - title
+              - content
+              - image
+    responses:
+      "201":
+        description: blog created successfully
+      "400":
+        description: required field error
+      "500":
+        description: something goes wrong
+
+/blogs:
+  get:
+    tags:
+      - Blog
+    summary: Retrieve all blogs
+    description: Retrieve all blogs from the database
+    responses:
+      "200":
+        description: Successful request
+      "500":
+        description: something goes wrong
+
+/blogs/{id}:
+  get:
+    tags:
+      - Blog
+    summary: Retrieve single blogs
+    description: Retrieve single blogs from the database by id
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: blog id
+        type: string
+    responses:
+      "200":
+        description: Successful request
+      "404":
+        description: blog with the given ID was not found.
+      "500":
+        description: something goes wrong
+
+/blogs/edit/{id}:
+  put:
+    tags:
+      - Blog
+    summary: edit blog
+    description: edit blog in database
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: blog id
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                description: The title of the blog
+              content:
+                type: string
+                description: The content of the blog
+            required:
+              - title
+              - content
+    responses:
+      "200":
+        description: blog edited successfully
+      "400":
+        description: required field error
+      "404":
+        description: blog with the given ID was not found.
+      "500":
+        description: something goes wrong
+
+/blogs/delete/{id}:
+  delete:
+    tags:
+      - Blog
+    summary: delete blog
+    description: remove blog in database
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: blog id
+        type: string
+    responses:
+      "200":
+        description: blog deleted successfully
+      "404":
+        description: blog with the given ID was not found.
+      "500":
+        description: something goes wrong
+
+/blogs/view/{id}:
+  put:
+    tags:
+      - Blog
+    summary: view a blog
+    description: increase views number of a blog
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: blog id
+        type: string
+    responses:
+      "200":
+        description: blog views updated successfully
+      "404":
+        description: blog with the given ID was not found.
+      "500":
+        description: something goes wrong
+
+/blogs/like/{id}:
+  put:
+    tags:
+      - Blog
+    summary: like a blog
+    description: increase like number of a blog
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: blog id
+        type: string
+    responses:
+      "200":
+        description: blog likes updated successfully"
+      "404":
+        description: blog with the given ID was not found.
+      "500":
+        description: something goes wrong
