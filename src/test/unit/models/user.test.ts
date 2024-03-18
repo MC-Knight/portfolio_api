@@ -22,3 +22,19 @@ describe("user.generateAuthToken", () => {
     expect(decoded).toMatchObject(payload);
   });
 });
+
+describe("user.generateRefreshToken", () => {
+  it("should return a valid JWT", () => {
+    const payload = {
+      _id: new mongoose.Types.ObjectId().toHexString(),
+      isAdmin: true,
+    };
+    const user = new User(payload);
+    const token = user.generateRefreshToken();
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_REFRESH_KEY as Secret
+    ) as JwtPayload;
+    expect(decoded).toMatchObject(payload);
+  });
+});
