@@ -1,0 +1,125 @@
+/users/register:
+  post:
+    tags:
+      - Auth
+    summary: register new user
+    description: Register a new user. This will create a new account for the user in database
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              firstName:
+                type: string
+                example: john
+              lastName:
+                type: string
+                example: doe
+              email:
+                type: string
+                format: email
+                example: example@gmail.com
+              password:
+                type: string
+                example: John@knight1234
+            required:
+              - firstName
+              - lastName
+              - email
+              - password
+    responses:
+      "201":
+        description: Registered successfully
+      "400":
+        description: User with that email already Exist or required field error
+      "500":
+        description: something goes wrong
+
+/users/login:
+  post:
+    tags:
+      - Auth
+    summary: login
+    description: login with email and password to get auth tokens
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+                example: example@gmail.com
+              password:
+                type: string
+                example: John@knight1234
+            required:
+              - email
+              - password
+    responses:
+      "200":
+        description: Logged in successfully!
+      "400":
+        description: Invalid email or password, required field error
+      "500":
+        description: something goes wrong
+
+/users/token:
+  post:
+    tags:
+      - Auth
+    summary: get new access token
+    description: user refresh token to get new access token
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+            required:
+              - token
+    responses:
+      "200":
+        description: new access token
+      "400":
+        description: required field error
+      "403":
+        description: Refresh token not found or Forbidden
+      "500":
+        description: something goes wrong
+
+/users/logout:
+  post:
+    tags:
+      - Auth
+    summary: logout
+    description: logout from server and delete your tokens
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+            required:
+              - token
+    responses:
+      "200":
+        description: logged out successfully
+      "400":
+        description: required field error
+      "403":
+        description: Refresh token not found
+      "500":
+        description: something goes wrong

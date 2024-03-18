@@ -18,6 +18,9 @@
                 type: string
                 description: blog id
                 example: 65f1ca4d1c1c23d46fbe5b5f
+            required:
+              - content
+              - blog
     responses:
       "201":
         description: comment posted successfully
