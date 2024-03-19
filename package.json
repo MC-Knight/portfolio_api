@@ -11,7 +11,8 @@
     "server": "concurrently \"npx tsc -w\" \"nodemon src/app.ts\" ",
     "test": "jest --coverage",
     "test:prod": "jest",
-    "coverage": "jest --coverage | coveralls"
+    "coverage": "jest --collect-coverage && coveralls < coverage/lcov.info",
+    "coverage:dev": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "keywords": [],
   "author": "",

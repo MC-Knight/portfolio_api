@@ -11,7 +11,7 @@ describe("/api/blogs", () => {
   });
 
   afterEach(async () => {
-    testServer.close();
+    await testServer.close();
     await Blog.deleteMany({});
   });
 

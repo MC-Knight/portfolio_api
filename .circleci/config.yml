@@ -18,7 +18,7 @@ jobs:
           command: npm run build
       - run:
           name: code-coverage
-          command: npm run coverage
+          command: npm run coverage:dev
       - coveralls/upload
       - store_artifacts:
           path: test-results
