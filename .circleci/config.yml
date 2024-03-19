@@ -10,7 +10,7 @@ jobs:
           command: npm install
       - run:
           name: Run tests
-          command: npm run test
+          command: npm run test:prod
       - run:
           name: Build project
           command: npm run build
