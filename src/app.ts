@@ -8,7 +8,11 @@ import { addDocumentation } from "./startups/docs";
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT ?? 3000;
+let port = process.env.PORT ?? 3000;
+
+if (process.env.NODE_ENV === "test") {
+  port = Math.floor(Math.random() * 60000) + 5000;
+}
 
 ConnectToDb();
 
@@ -20,6 +24,8 @@ app.get("/", (req: Request, res: Response) => {
   res.send("my brand api");
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
+
+export { server };

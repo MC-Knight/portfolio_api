@@ -8,6 +8,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "ignorePatterns": ["jest.config.js"],
   "rules": {
     "@typescript-eslint/quotes": "off",
     "@typescript-eslint/semi": "off",
