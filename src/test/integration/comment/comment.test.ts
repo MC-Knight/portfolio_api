@@ -23,12 +23,20 @@ describe("/api/comments", () => {
   });
 
   describe("POST /create", () => {
-    it("should return 400 if there is missing required field", async () => {
+    it("should return 400 if required blog field is missing", async () => {
       const res = await request(testServer).post("/api/comments/create").send({
         content: "This is a comment",
       });
       expect(res.status).toBe(400);
       expect(res.body).toHaveProperty("error", "blog is required.");
+    });
+
+    it("should return 400 if required content field is missing", async () => {
+      const res = await request(testServer).post("/api/comments/create").send({
+        blog: new mongoose.Types.ObjectId().toString(),
+      });
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty("error", "content is required.");
     });
 
     it("should return 404 if passed blog doesn't exist", async () => {
