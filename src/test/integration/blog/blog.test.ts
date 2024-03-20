@@ -15,6 +15,11 @@ describe("/api/blogs", () => {
     await Blog.deleteMany({});
   });
 
+  afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoose.connection.close();
+  });
+
   describe("GET /", () => {
     it("should return all blogs", async () => {
       await Blog.collection.insertMany([

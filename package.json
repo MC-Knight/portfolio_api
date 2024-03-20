@@ -9,7 +9,7 @@
     "start": "node dist/app.js",
     "preserver": "npm run build",
     "server": "concurrently \"npx tsc -w\" \"nodemon src/app.ts\" ",
-    "test": "jest --coverage --verbose --runInBand"
+    "test": "jest --coverage --detectOpenHandles --verbose --runInBand"
   },
   "keywords": [],
   "author": "",
