@@ -1,5 +1,3 @@
-[![Coverage Status](https://coveralls.io/repos/github/MC-Knight/portfolio_api/badge.svg?branch=ft-api-docs)](https://coveralls.io/github/MC-Knight/portfolio_api?branch=ft-api-docs)
-
 ## portfolio_api
 
 my portfolio restApi
