@@ -4,6 +4,10 @@ import { RefreshToken } from "../../../models/authTokens";
 import { server } from "../../../app";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import jwt, { type Secret } from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 let testServer: any;
 
@@ -104,6 +108,25 @@ describe("/api/users", () => {
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("message", "Logged in successfully!");
     });
+
+    it("should return 400 if there is user with the same email but with wrong password", async () => {
+      const salt = await bcrypt.genSalt(10);
+      const password = await bcrypt.hash("John@knight1234", salt);
+      const user = new User({
+        firstName: "john",
+        lastName: "doe",
+        email: "example@gmail.com",
+        password,
+      });
+      await user.save();
+
+      const res = await request(testServer).post("/api/users/login").send({
+        email: "example@gmail.com",
+        password: "John@knight123456",
+      });
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty("error", "Invalid email or password");
+    });
   });
 
   describe("POST /token", () => {
@@ -119,6 +142,47 @@ describe("/api/users", () => {
       });
       expect(res.status).toBe(403);
       expect(res.body).toHaveProperty("error", "Refresh token not found");
+    });
+
+    it("should return 403 if token is registered but decoded with wrong user", async () => {
+      const token = jwt.sign(
+        { _id: new mongoose.Types.ObjectId().toString(), isAdmin: false },
+        process.env.JWT_REFRESH_KEY as Secret
+      );
+      const refreshToken = new RefreshToken({
+        token,
+      });
+      await refreshToken.save();
+      const res = await request(testServer).post("/api/users/token").send({
+        token,
+      });
+      expect(res.status).toBe(403);
+      expect(res.body).toHaveProperty("error", "Forbidden");
+    });
+
+    it("should return 200 if token is registered and decoded with existing user", async () => {
+      const user = new User({
+        firstName: "john",
+        lastName: "doe",
+        email: "example@gmail.com",
+        password: "John@knight1234",
+      });
+      await user.save();
+
+      const token = jwt.sign(
+        { _id: user._id, isAdmin: false },
+        process.env.JWT_REFRESH_KEY as Secret
+      );
+
+      const refreshToken = new RefreshToken({
+        token,
+      });
+      await refreshToken.save();
+      const res = await request(testServer).post("/api/users/token").send({
+        token,
+      });
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("access");
     });
   });
 
