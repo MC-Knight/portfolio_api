@@ -70,9 +70,15 @@ const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{12,}$/;
 
 const validateUser = (user: IUser): Joi.ValidationResult<any> => {
   const schema = Joi.object({
-    firstName: Joi.string().min(3).max(50).required(),
-    lastName: Joi.string().min(3).max(50).required(),
-    email: Joi.string().min(5).max(255).required().email(),
+    firstName: Joi.string().min(3).max(50).required().messages({
+      "any.required": "firstName is required.",
+    }),
+    lastName: Joi.string().min(3).max(50).required().messages({
+      "any.required": "lastName is required.",
+    }),
+    email: Joi.string().min(5).max(255).required().email().messages({
+      "any.required": "Email is required.",
+    }),
     password: Joi.string()
       .pattern(PASSWORD_REGEX)
       .max(1024)

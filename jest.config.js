@@ -8,4 +8,7 @@ module.exports = {
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,
+  coveragePathIgnorePatterns: ["/node_modules/", ".spec.js$", ".test.js$"],
+  coverageDirectory: "./coverage",
+  coverageReporters: ["text", "text-summary", "lcov"],
 };

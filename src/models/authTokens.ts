@@ -13,7 +13,9 @@ const RefreshToken = model<IRefToken>("RefreshToken", refToken);
 
 const validateRefToken = (reftoken: IRefToken): Joi.ValidationResult<any> => {
   const schema = Joi.object({
-    token: Joi.string().min(3).required(),
+    token: Joi.string().min(3).required().messages({
+      "any.required": "token is required.",
+    }),
   });
 
   return schema.validate(reftoken);

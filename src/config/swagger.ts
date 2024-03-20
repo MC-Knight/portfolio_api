@@ -1,9 +1,10 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import dotenv from "dotenv";
+import { getSwaggerServer } from "../startups/getSwaggerServer";
 
 dotenv.config();
 
-const swaggerServer = process.env.SWAGGER_SERVER ?? "http://localhost:7000/api";
+const swaggerServer = getSwaggerServer();
 
 const options: swaggerJSDoc.Options = {
   definition: {

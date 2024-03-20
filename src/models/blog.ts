@@ -27,8 +27,12 @@ const validateBlog = (
   blog: Pick<IBlog, "title" | "content">
 ): Joi.ValidationResult<any> => {
   const schema = Joi.object({
-    title: Joi.string().min(2).required(),
-    content: Joi.string().min(3).required(),
+    title: Joi.string().min(2).required().messages({
+      "any.required": "title is required.",
+    }),
+    content: Joi.string().min(3).required().messages({
+      "any.required": "content is required.",
+    }),
   });
 
   return schema.validate(blog);
