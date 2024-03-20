@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/MC-Knight/portfolio_api/badge.svg?branch=ft-api-docs)](https://coveralls.io/github/MC-Knight/portfolio_api?branch=ft-api-docs)
+[![Coverage Status](https://coveralls.io/repos/github/MC-Knight/portfolio_api/badge.svg?main)](https://coveralls.io/github/MC-Knight/portfolio_api?branch=main)
 
 ## portfolio_api
 
