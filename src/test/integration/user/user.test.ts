@@ -14,6 +14,7 @@ describe("/api/users", () => {
 
   afterEach(async () => {
     await testServer.close();
+    await RefreshToken.deleteMany({});
     await User.deleteMany({});
   });
 
