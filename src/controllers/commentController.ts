@@ -10,12 +10,16 @@ class CommentController {
     try {
       const { error } = validate(req.body);
       if (error !== undefined) {
-        return res.status(400).json({ error: error?.details[0].message });
+        return res
+          .status(400)
+          .json({ statuCode: 400, error: error?.details[0].message });
       }
 
       const existingBlog = await Blog.findById(req.body.blog);
       if (existingBlog == null) {
-        return res.status(404).json({ error: "Invalid blog ID" });
+        return res
+          .status(404)
+          .json({ statuCode: 404, error: "Invalid blog ID" });
       }
       const comment = new Comment({
         title: req.body.title,
@@ -25,9 +29,13 @@ class CommentController {
 
       await comment.save();
 
-      res.status(201).json({ message: "comment posted successfully", comment });
+      res.status(201).json({
+        statuCode: 201,
+        message: "comment posted successfully",
+        comment,
+      });
     } catch (error) {
-      res.status(500).json({ error: "sommething goes wrong" });
+      res.status(500).json({ statuCode: 500, error: "sommething goes wrong" });
     }
   }
 
@@ -38,12 +46,15 @@ class CommentController {
     const comment = await Comment.findByIdAndDelete(req.params.id);
 
     if (comment == null) {
-      return res
-        .status(404)
-        .json({ error: "comment with the given ID was not found." });
+      return res.status(404).json({
+        statuCode: 404,
+        error: "comment with the given ID was not found.",
+      });
     }
 
-    res.status(200).json({ message: "comment deleted successfully" });
+    res
+      .status(200)
+      .json({ statuCode: 200, message: "comment deleted successfully" });
   }
 }
 
