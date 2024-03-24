@@ -32,14 +32,16 @@ class UserController {
   ): Promise<undefined | Response<any, Record<string, any>>> {
     const { error } = validate(req.body);
     if (error !== undefined) {
-      return res.status(400).json({ error: error.details[0].message });
+      return res
+        .status(400)
+        .json({ statuCode: 400, error: error.details[0].message });
     }
 
     let user = await User.findOne({ email: req.body.email });
     if (user !== null) {
       return res
         .status(400)
-        .json({ error: "User with that email already Exist" });
+        .json({ statuCode: 400, error: "User with that email already Exist" });
     }
 
     user = new User(
@@ -52,6 +54,7 @@ class UserController {
     const token = user.generateAuthToken();
 
     res.status(201).json({
+      statuCode: 201,
       message: "Registered successfully",
       access: token,
     });
@@ -63,12 +66,16 @@ class UserController {
   ): Promise<undefined | Response<any, Record<string, any>>> {
     const { error } = validateLoginRequestBody(req.body);
     if (error !== undefined) {
-      return res.status(400).json({ error: error.details[0].message });
+      return res
+        .status(400)
+        .json({ statuCode: 400, error: error.details[0].message });
     }
 
     const user = await User.findOne({ email: req.body.email });
     if (user === null) {
-      return res.status(400).json({ error: "Invalid email or password" });
+      return res
+        .status(400)
+        .json({ statuCode: 400, error: "Invalid email or password" });
     }
 
     const validPassword = await bcrypt.compare(
@@ -77,7 +84,9 @@ class UserController {
     );
 
     if (!validPassword) {
-      return res.status(400).json({ error: "Invalid email or password" });
+      return res
+        .status(400)
+        .json({ statuCode: 400, error: "Invalid email or password" });
     }
 
     const accessToken = user.generateAuthToken();
@@ -91,6 +100,7 @@ class UserController {
     await newRefToken.save();
 
     res.status(200).json({
+      statuCode: 200,
       message: "Logged in successfully!",
       access: accessToken,
       refresh: refreshToken,
@@ -103,7 +113,9 @@ class UserController {
   ): Promise<undefined | Response<any, Record<string, any>>> {
     const { error } = validateRefToken(req.body);
     if (error !== undefined) {
-      return res.status(400).json({ error: error.details[0].message });
+      return res
+        .status(400)
+        .json({ statuCode: 400, error: error.details[0].message });
     }
 
     const refreshToken = req.body.token;
@@ -113,7 +125,9 @@ class UserController {
     });
 
     if (refreshTokenDoc === null) {
-      return res.status(403).json({ error: "Refresh token not found" });
+      return res
+        .status(403)
+        .json({ statuCode: 403, error: "Refresh token not found" });
     }
 
     const decode = jwt.verify(
@@ -126,13 +140,11 @@ class UserController {
     const user = await User.findById(userId);
     if (user === null) {
       await RefreshToken.findByIdAndDelete(refreshTokenDoc._id);
-      return res.status(403).json({ error: "Forbidden" });
+      return res.status(403).json({ statuCode: 403, error: "Forbidden" });
     }
 
     const accessToken = user.generateAuthToken();
-    res.status(200).json({
-      access: accessToken,
-    });
+    res.status(200).json({ statuCode: 200, access: accessToken });
   }
 
   static async logout(
@@ -141,7 +153,9 @@ class UserController {
   ): Promise<undefined | Response<any, Record<string, any>>> {
     const { error } = validateRefToken(req.body);
     if (error !== undefined) {
-      return res.status(400).json({ error: error.details[0].message });
+      return res
+        .status(400)
+        .json({ statuCode: 400, error: error.details[0].message });
     }
 
     const refreshToken = req.body.token;
@@ -151,12 +165,14 @@ class UserController {
     });
 
     if (refreshTokenDoc === null) {
-      return res.status(403).json({ error: "Refresh token not found" });
+      return res
+        .status(403)
+        .json({ statuCode: 403, error: "Refresh token not found" });
     }
 
-    res.status(200).json({
-      message: "logged out successfully",
-    });
+    res
+      .status(200)
+      .json({ statuCode: 200, message: "logged out successfully" });
   }
 }
 

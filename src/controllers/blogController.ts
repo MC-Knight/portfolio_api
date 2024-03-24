@@ -11,7 +11,9 @@ class BlogController {
     try {
       const { error } = validate(req.body);
       if (error !== undefined) {
-        return res.status(400).json({ error: error?.details[0].message });
+        return res
+          .status(400)
+          .json({ statuCode: 400, error: error?.details[0].message });
       }
 
       let posterUrl: string | undefined;
@@ -30,9 +32,13 @@ class BlogController {
 
       await blog.save();
 
-      res.status(201).json({ message: "blog created successfully", blog });
+      res.status(201).json({
+        statuCode: 201,
+        message: "blog created successfully",
+        blog,
+      });
     } catch (error) {
-      res.status(500).json({ error: "sommething goes wrong" });
+      res.status(500).json({ statuCode: 500, error: "sommething goes wrong" });
     }
   }
 
@@ -45,9 +51,10 @@ class BlogController {
       const blog = await Blog.findById(blogId);
 
       if (blog == null) {
-        return res
-          .status(404)
-          .json({ error: "blog with the given ID was not found." });
+        return res.status(404).json({
+          statuCode: 404,
+          error: "blog with the given ID was not found.",
+        });
       }
 
       const comments = await Comment.find({ blog: blog._id });
@@ -63,9 +70,9 @@ class BlogController {
         comments,
       };
 
-      res.status(200).json(blogWithComments);
+      res.status(200).json({ statuCode: 200, blogWithComments });
     } catch (error) {
-      res.status(500).json({ error: "Something went wrong" });
+      res.status(500).json({ statuCode: 500, error: "Something went wrong" });
     }
   }
 
@@ -95,9 +102,11 @@ class BlogController {
         }
       }
 
-      res.status(200).json(blogsWithComments);
+      res.status(200).json({ statuCode: 200, blogsWithComments });
     } catch (error) {
-      return res.status(500).json({ error: "Something went wrong" });
+      return res
+        .status(500)
+        .json({ statuCode: 500, error: "Something went wrong" });
     }
   }
 
@@ -107,7 +116,9 @@ class BlogController {
   ): Promise<undefined | Response<any, Record<string, any>>> {
     const { error } = validate(req.body);
     if (error !== undefined) {
-      return res.status(400).json({ error: error?.details[0].message });
+      return res
+        .status(400)
+        .json({ statuCode: 400, error: error?.details[0].message });
     }
 
     const blog = await Blog.findByIdAndUpdate(req.params.id, {
@@ -116,11 +127,16 @@ class BlogController {
     });
 
     if (blog == null) {
-      res.status(404).json({ error: "blog with the given ID was not found." });
+      res.status(404).json({
+        statuCode: 404,
+        error: "blog with the given ID was not found.",
+      });
       return;
     }
 
-    res.status(200).json({ message: "blog edited successfully" });
+    res
+      .status(200)
+      .json({ statuCode: 200, message: "blog edited successfully" });
   }
 
   static async deleteBlogs(
@@ -131,12 +147,15 @@ class BlogController {
     const blog = await Blog.findByIdAndDelete(req.params.id);
 
     if (blog == null) {
-      return res
-        .status(404)
-        .json({ error: "blog with the given ID was not found." });
+      return res.status(404).json({
+        statuCode: 404,
+        error: "blog with the given ID was not found.",
+      });
     }
 
-    res.status(200).json({ message: "blog deleted successfully" });
+    res
+      .status(200)
+      .json({ statuCode: 200, message: "blog deleted successfully" });
   }
 
   static async viewBlogs(
@@ -150,12 +169,15 @@ class BlogController {
     );
 
     if (blog == null) {
-      return res
-        .status(404)
-        .json({ error: "blog with the given ID was not found." });
+      return res.status(404).json({
+        statuCode: 404,
+        error: "blog with the given ID was not found.",
+      });
     }
 
-    res.status(200).json({ message: "blog views updated successfully" });
+    res
+      .status(200)
+      .json({ statuCode: 200, message: "blog views updated successfully" });
   }
 
   static async likeBlogs(
@@ -169,12 +191,15 @@ class BlogController {
     );
 
     if (blog == null) {
-      return res
-        .status(404)
-        .json({ error: "blog with the given ID was not found." });
+      return res.status(404).json({
+        statuCode: 404,
+        error: "blog with the given ID was not found.",
+      });
     }
 
-    res.status(200).json({ message: "blog likes updated successfully" });
+    res
+      .status(200)
+      .json({ statuCode: 200, message: "blog likes updated successfully" });
   }
 }
 

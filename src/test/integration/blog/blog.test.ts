@@ -39,9 +39,13 @@ describe("/api/blogs", () => {
 
       const res = await request(testServer).get("/api/blogs");
       expect(res.status).toBe(200);
-      expect(res.body.length).toBe(2);
-      expect(res.body.some((b: any) => b.title === "blog1")).toBeTruthy();
-      expect(res.body.some((b: any) => b.title === "blog2")).toBeTruthy();
+      expect(res.body.blogsWithComments.length).toBe(2);
+      expect(
+        res.body.blogsWithComments.some((b: any) => b.title === "blog1")
+      ).toBeTruthy();
+      expect(
+        res.body.blogsWithComments.some((b: any) => b.title === "blog2")
+      ).toBeTruthy();
     });
   });
 
@@ -57,7 +61,7 @@ describe("/api/blogs", () => {
         "/api/blogs/" + blog._id.toString()
       );
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("title", "blog1");
+      expect(res.body.blogWithComments).toHaveProperty("title", "blog1");
     });
 
     it("should return 404 if no blog with given id exist", async () => {
