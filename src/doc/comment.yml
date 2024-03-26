@@ -1,4 +1,4 @@
-/comments/create:
+/comments:
   post:
     tags:
       - Comment
@@ -29,7 +29,7 @@
       "500":
         description: something goes wrong
 
-/comments/delete/{id}:
+/comments/{id}:
   delete:
     tags:
       - Comment

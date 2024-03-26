@@ -1,4 +1,4 @@
-/blogs/create:
+/blogs:
   post:
     tags:
       - Blog
@@ -34,8 +34,6 @@
         description: required field error
       "500":
         description: something goes wrong
-
-/blogs:
   get:
     tags:
       - Blog
@@ -66,8 +64,6 @@
         description: blog with the given ID was not found.
       "500":
         description: something goes wrong
-
-/blogs/edit/{id}:
   put:
     tags:
       - Blog
@@ -106,8 +102,6 @@
         description: blog with the given ID was not found.
       "500":
         description: something goes wrong
-
-/blogs/delete/{id}:
   delete:
     tags:
       - Blog

@@ -7,7 +7,7 @@ import isAdminMiddleware from "../middleware/verifyAccess";
 const routerBlog = express();
 
 routerBlog.post(
-  "/create",
+  "",
   authMiddleware,
   isAdminMiddleware,
   upload.single("image"),
@@ -16,13 +16,13 @@ routerBlog.post(
 routerBlog.get("", BlogController.getAllBlogs);
 routerBlog.get("/:id", BlogController.getSingleBlog);
 routerBlog.put(
-  "/edit/:id",
+  "/:id",
   authMiddleware,
   isAdminMiddleware,
   BlogController.editBlogs
 );
 routerBlog.delete(
-  "/delete/:id",
+  "/:id",
   authMiddleware,
   isAdminMiddleware,
   BlogController.deleteBlogs

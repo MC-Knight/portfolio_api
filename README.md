@@ -16,23 +16,23 @@ This is a RESTful API for managing personal blogs. It allows admin users to crea
 
 ```
 Blog:
-  /blogs/create
-  /blogs
-  /blogs/{id}
-  /blogs/edit/{id}
-  /blogs/delete/{id}
-  /blogs/view/{id}
-  /blog/like/{id}
+  POST /blogs
+  GET /blogs
+  GET /blogs/{id}
+  PUT /blogs/{id}
+  DELETE /blogs/{id}
+  PUT /blogs/view/{id}
+  PUT /blog/like/{id}
 
 Comment:
-  /comments/create
-  /comments/delete
+  POST /comments
+  DELETE /comments/{id}
 
 User:
-  /users/register
-  /users/login
-  /users/token
-  /users/logout
+  POST /users/register
+  POST /users/login
+  POST /users/token
+  POST /users/logout
 ```
 
 ## Setup
