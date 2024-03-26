@@ -22,9 +22,9 @@ describe("/api/comments", () => {
     await mongoose.connection.close();
   });
 
-  describe("POST /create", () => {
+  describe("POST /", () => {
     it("should return 400 if required blog field is missing", async () => {
-      const res = await request(testServer).post("/api/comments/create").send({
+      const res = await request(testServer).post("/api/comments").send({
         content: "This is a comment",
       });
       expect(res.status).toBe(400);
@@ -32,7 +32,7 @@ describe("/api/comments", () => {
     });
 
     it("should return 400 if required content field is missing", async () => {
-      const res = await request(testServer).post("/api/comments/create").send({
+      const res = await request(testServer).post("/api/comments").send({
         blog: new mongoose.Types.ObjectId().toString(),
       });
       expect(res.status).toBe(400);
@@ -40,7 +40,7 @@ describe("/api/comments", () => {
     });
 
     it("should return 404 if passed blog doesn't exist", async () => {
-      const res = await request(testServer).post("/api/comments/create").send({
+      const res = await request(testServer).post("/api/comments").send({
         content: "This is a comment",
         blog: new mongoose.Types.ObjectId().toString(),
       });
@@ -49,7 +49,7 @@ describe("/api/comments", () => {
     });
 
     it("should return 500 if passed blog is not valid mongoose objectId", async () => {
-      const res = await request(testServer).post("/api/comments/create").send({
+      const res = await request(testServer).post("/api/comments").send({
         content: "This is a comment",
         blog: "12345",
       });
@@ -63,7 +63,7 @@ describe("/api/comments", () => {
       });
       await blog.save();
 
-      const res = await request(testServer).post("/api/comments/create").send({
+      const res = await request(testServer).post("/api/comments").send({
         content: "This is a comment",
         blog: blog._id.toString(),
       });
@@ -72,10 +72,10 @@ describe("/api/comments", () => {
     });
   });
 
-  describe("DELETE /delete/:id", () => {
+  describe("DELETE /:id", () => {
     it("should return 404 if passed comment id doesn't exist", async () => {
       const res = await request(testServer).delete(
-        `/api/comments/delete/${new mongoose.Types.ObjectId().toString()}`
+        `/api/comments/${new mongoose.Types.ObjectId().toString()}`
       );
       expect(res.status).toBe(404);
       expect(res.body).toHaveProperty(
@@ -98,7 +98,7 @@ describe("/api/comments", () => {
       await comment.save();
 
       const res = await request(testServer).delete(
-        `/api/comments/delete/${comment._id.toString()}`
+        `/api/comments/${comment._id.toString()}`
       );
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty(

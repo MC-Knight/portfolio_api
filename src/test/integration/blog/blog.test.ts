@@ -131,7 +131,7 @@ describe("/api/blogs", () => {
     });
   });
 
-  describe("DELETE /delete/:id", () => {
+  describe("DELETE /:id", () => {
     it("should return 401 if user is not authorized", async () => {
       const blog = new Blog({
         title: "blog1",
@@ -140,7 +140,7 @@ describe("/api/blogs", () => {
       await blog.save();
 
       const res = await request(server).delete(
-        "/api/blogs/delete/" + blog._id.toString()
+        "/api/blogs/" + blog._id.toString()
       );
       expect(res.status).toBe(401);
     });
@@ -152,7 +152,7 @@ describe("/api/blogs", () => {
       );
 
       const res = await request(server)
-        .delete("/api/blogs/delete/" + new mongoose.Types.ObjectId().toString())
+        .delete("/api/blogs/" + new mongoose.Types.ObjectId().toString())
         .set("Authorization", `Bearer ${token}`);
 
       expect(res.status).toBe(404);
@@ -175,7 +175,7 @@ describe("/api/blogs", () => {
       await blog.save();
 
       const res = await request(server)
-        .delete("/api/blogs/delete/" + blog._id.toString())
+        .delete("/api/blogs/" + blog._id.toString())
         .set("Authorization", `Bearer ${token}`);
 
       expect(res.status).toBe(200);
@@ -192,7 +192,7 @@ describe("/api/blogs", () => {
       await blog.save();
 
       const res = await request(server).put(
-        "/api/blogs/edit/" + blog._id.toString()
+        "/api/blogs/" + blog._id.toString()
       );
       expect(res.status).toBe(401);
     });
@@ -210,7 +210,7 @@ describe("/api/blogs", () => {
       await blog.save();
 
       const res = await request(server)
-        .put("/api/blogs/edit/" + blog._id.toString())
+        .put("/api/blogs/" + blog._id.toString())
         .set("Authorization", `Bearer ${token}`)
         .send({
           title: "blog1",
@@ -226,7 +226,7 @@ describe("/api/blogs", () => {
       );
 
       const res = await request(server)
-        .put("/api/blogs/edit/" + new mongoose.Types.ObjectId().toString())
+        .put("/api/blogs/" + new mongoose.Types.ObjectId().toString())
         .set("Authorization", `Bearer ${token}`)
         .send({
           title: "blog1",
@@ -252,7 +252,7 @@ describe("/api/blogs", () => {
       await blog.save();
 
       const res = await request(server)
-        .put("/api/blogs/edit/" + blog._id.toString())
+        .put("/api/blogs/" + blog._id.toString())
         .set("Authorization", `Bearer ${token}`)
         .send({
           title: "blog1 edited",
@@ -263,9 +263,9 @@ describe("/api/blogs", () => {
     });
   });
 
-  describe("POST /create", () => {
+  describe("POST /", () => {
     it("should return 401 if user is not authorized", async () => {
-      const res = await request(server).post("/api/blogs/create").send({
+      const res = await request(server).post("/api/blogs").send({
         title: "blog1",
         content: "content1",
       });
@@ -278,7 +278,7 @@ describe("/api/blogs", () => {
         process.env.JWT_ACCESS_KEY as Secret
       );
       const res = await request(server)
-        .post("/api/blogs/create")
+        .post("/api/blogs")
         .set("Authorization", `Bearer ${token}`)
         .send({
           title: "blog1",
@@ -293,7 +293,7 @@ describe("/api/blogs", () => {
         process.env.JWT_ACCESS_KEY as Secret
       );
       const res = await request(server)
-        .post("/api/blogs/create")
+        .post("/api/blogs")
         .set("Authorization", `Bearer ${token}`)
         .send({
           content: "blog1",
@@ -308,7 +308,7 @@ describe("/api/blogs", () => {
         process.env.JWT_ACCESS_KEY as Secret
       );
       const res = await request(server)
-        .post("/api/blogs/create")
+        .post("/api/blogs")
         .set("Authorization", `Bearer ${token}`)
         .send({
           title: "title1",
