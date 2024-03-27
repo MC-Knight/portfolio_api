@@ -90,7 +90,7 @@ describe("/api/users", () => {
       expect(res.body).toHaveProperty("error", "Invalid email or password");
     });
 
-    it("should return 200 if there is user with the same email and password", async () => {
+    it("should return 403 if there is user with the same email and password but is not an admin", async () => {
       const salt = await bcrypt.genSalt(10);
       const password = await bcrypt.hash("John@knight1234", salt);
       const user = new User({
@@ -98,6 +98,26 @@ describe("/api/users", () => {
         lastName: "doe",
         email: "example@gmail.com",
         password,
+      });
+      await user.save();
+
+      const res = await request(testServer).post("/api/users/login").send({
+        email: "example@gmail.com",
+        password: "John@knight1234",
+      });
+      expect(res.status).toBe(403);
+      expect(res.body).toHaveProperty("error", "Forbidden");
+    });
+
+    it("should return 200 if there is user with the same email and password but is an admin", async () => {
+      const salt = await bcrypt.genSalt(10);
+      const password = await bcrypt.hash("John@knight1234", salt);
+      const user = new User({
+        firstName: "john",
+        lastName: "doe",
+        email: "example@gmail.com",
+        password,
+        isAdmin: true,
       });
       await user.save();
 
