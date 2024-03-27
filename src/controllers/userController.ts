@@ -89,6 +89,10 @@ class UserController {
         .json({ statuCode: 400, error: "Invalid email or password" });
     }
 
+    if (!user.isAdmin) {
+      return res.status(403).json({ statusCode: 403, error: "Forbidden" });
+    }
+
     const accessToken = user.generateAuthToken();
 
     const refreshToken = user.generateRefreshToken();
