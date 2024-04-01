@@ -23,6 +23,7 @@ Blog:
   DELETE /blogs/{id}
   PUT /blogs/view/{id}
   PUT /blog/like/{id}
+  PUT /blog/unlike/{id}
 
 Comment:
   POST /comments
