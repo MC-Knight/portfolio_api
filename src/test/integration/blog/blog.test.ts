@@ -131,6 +131,36 @@ describe("/api/blogs", () => {
     });
   });
 
+  describe("PUT /unlike/:id", () => {
+    it("should decrease the likes count of a blog if valid blog id passed", async () => {
+      const blog = new Blog({
+        title: "blog1",
+        content: "content1",
+      });
+      await blog.save();
+
+      const res = await request(server).put(
+        "/api/blogs/unlike/" + blog._id.toString()
+      );
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty(
+        "message",
+        "blog likes updated successfully"
+      );
+    });
+
+    it("should return 404 if blog doesn't exist", async () => {
+      const res = await request(server).put(
+        "/api/blogs/like/" + new mongoose.Types.ObjectId().toString()
+      );
+      expect(res.status).toBe(404);
+      expect(res.body).toHaveProperty(
+        "error",
+        "blog with the given ID was not found."
+      );
+    });
+  });
+
   describe("DELETE /:id", () => {
     it("should return 401 if user is not authorized", async () => {
       const blog = new Blog({
@@ -183,7 +213,7 @@ describe("/api/blogs", () => {
     });
   });
 
-  describe("PUT /edit/:id", () => {
+  describe("PUT /:id", () => {
     it("should return 401 if user is not authorized", async () => {
       const blog = new Blog({
         title: "blog1",

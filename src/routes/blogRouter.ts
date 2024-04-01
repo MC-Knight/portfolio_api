@@ -29,5 +29,6 @@ routerBlog.delete(
 );
 routerBlog.put("/view/:id", BlogController.viewBlogs);
 routerBlog.put("/like/:id", BlogController.likeBlogs);
+routerBlog.put("/unlike/:id", BlogController.unLikeBlogs);
 
 export default routerBlog;
