@@ -201,6 +201,36 @@ class BlogController {
       .status(200)
       .json({ statuCode: 200, message: "blog likes updated successfully" });
   }
+
+  static async unLikeBlogs(
+    req: Request,
+    res: Response
+  ): Promise<undefined | Response<any, Record<string, any>>> {
+    const blogToUpdate = await Blog.findById(req.params.id);
+    if (blogToUpdate?.likes === 0) {
+      return res.status(200).json({
+        statuCode: 200,
+        message: "blog likes updated successfully",
+      });
+    }
+
+    const blog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { likes: -1 } },
+      { new: true }
+    );
+
+    if (blog == null) {
+      return res.status(404).json({
+        statuCode: 404,
+        error: "blog with the given ID was not found.",
+      });
+    }
+
+    res
+      .status(200)
+      .json({ statuCode: 200, message: "blog likes updated successfully" });
+  }
 }
 
 export default BlogController;

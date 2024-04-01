@@ -162,3 +162,23 @@
         description: blog with the given ID was not found.
       "500":
         description: something goes wrong
+
+/blogs/unlike/{id}:
+  put:
+    tags:
+      - Blog
+    summary: unlike a blog
+    description: decrease like number of a blog
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: blog id
+        type: string
+    responses:
+      "200":
+        description: blog likes updated successfully"
+      "404":
+        description: blog with the given ID was not found.
+      "500":
+        description: something goes wrong
